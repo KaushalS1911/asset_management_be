@@ -160,7 +160,7 @@ router.get("/asset/service", async (req, res) => {
   return res.json(services);
 });
 
-router.get("/asset/:id", async (req, res) => {
+router.get("/asset/service/:id", async (req, res) => {
 
   const service = await ServiceModel.findById(req.params.id).populate('asset');
 
