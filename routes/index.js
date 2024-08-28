@@ -26,6 +26,13 @@ router.post('/asset',  upload.fields([
         remark,
     } = req.body;
 
+    const isExist = await AssetModel.exists({asset_name, asset_type, asset_code})
+
+    if(isExist) {
+        res.status(400);
+        throw new Error('Asset with entered details already exists.');
+    }
+
   const assetImage = req.files['asset-image'] ? req.files['asset-image'][0] : null;
   const invoiceImage = req.files['invoice-image'] ? req.files['invoice-image'][0] : null;
 
