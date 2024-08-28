@@ -123,7 +123,7 @@ router.delete("/asset/:id", async (req, res) => {
     return res.json({message: "Deleted Successfully"})
 });
 
-router.post('/asset/service', async (req, res) => {
+router.post('/service', async (req, res) => {
   const {
     asset,
     start_date,
@@ -155,12 +155,12 @@ router.post('/asset/service', async (req, res) => {
   return res.status(201).json({data: service, message: "Service details added successfully", status: 201});
 });
 
-router.get("/asset/service", async (req, res) => {
+router.get("/service", async (req, res) => {
   const services = await ServiceModel.find({}).populate('asset');
   return res.json(services);
 });
 
-router.get("/asset/service/:id", async (req, res) => {
+router.get("/service/:id", async (req, res) => {
 
   const service = await ServiceModel.findById(req.params.id).populate('asset');
 
@@ -172,7 +172,7 @@ router.get("/asset/service/:id", async (req, res) => {
   return res.json(service)
 });
 
-router.delete("/asset/service/:id", async (req, res) => {
+router.delete("/service/:id", async (req, res) => {
 
   const service = await ServiceModel.findByIdAndDelete(req.params.id);
 
@@ -184,7 +184,7 @@ router.delete("/asset/service/:id", async (req, res) => {
   return res.json({message: "Deleted Successfully"})
 });
 
-router.put('/asset/service/:id', async (req, res) => {
+router.put('/service/:id', async (req, res) => {
 
   const {id} = req.params
 
