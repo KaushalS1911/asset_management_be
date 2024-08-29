@@ -15,6 +15,7 @@ const serviceSchema = new mongoose.Schema({
     service_by: String,
     service_person: String,
     service_person_contact: String,
+    service_cost: Number,
     sended_by: String,
     received_by: String,
     receiver_contact: String,

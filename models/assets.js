@@ -12,6 +12,7 @@ const assetSchema = new mongoose.Schema({
     new_refurbish: String,
     in_warranty: Boolean,
     location: String,
+    person_name: String,
     image_url: String,
     invoice_url: String,
     invoice_no: String,
