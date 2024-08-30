@@ -8,7 +8,7 @@ cloudinary.config({
 
 const uploadFile = async (fileBuffer) => {
     try {
-        const fileSize = fileBuffer.length;
+        const fileSize = fileBuffer?.length;
         const maxFileSize = 10 * 1024 * 1024;
 
         if (fileSize > maxFileSize) {
@@ -36,7 +36,7 @@ const uploadFile = async (fileBuffer) => {
 
 const uploadInvoiceFile = async (fileBuffer) => {
     try {
-        const fileSize = fileBuffer.length;
+        const fileSize = fileBuffer?.length;
         const maxFileSize = 10 * 1024 * 1024;
 
         if (fileSize > maxFileSize) {
