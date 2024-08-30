@@ -37,8 +37,8 @@ router.post('/asset',  upload.fields([
   const assetImage = req.files['asset-image'] ? req.files['asset-image'][0] : null;
   const invoiceImage = req.files['invoice-image'] ? req.files['invoice-image'][0] : null;
 
-    const assetImageUrl = await uploadFile(assetImage.buffer);
-    const invoiceImageUrl = await uploadInvoiceFile(invoiceImage.buffer);
+    const assetImageUrl = await uploadFile(assetImage?.buffer);
+    const invoiceImageUrl = await uploadInvoiceFile(invoiceImage?.buffer);
 
     const asset = await AssetModel.create({
       asset_name,
