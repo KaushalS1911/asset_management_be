@@ -5,11 +5,9 @@ const AssetModel = require('../models/assets');
 const ServiceModel = require('../models/services');
 const { uploadFile, uploadInvoiceFile } = require('../helpers/images');
 
-// Set up multer storage
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-// Helper function to handle file uploads
 async function handleFileUploads(files) {
     const assetImage = files['asset-image'] ? files['asset-image'][0] : null;
     const invoiceImage = files['invoice-image'] ? files['invoice-image'][0] : null;
@@ -20,7 +18,6 @@ async function handleFileUploads(files) {
     return { assetImageUrl, invoiceImageUrl };
 }
 
-// POST /asset - Create a new asset
 router.post('/asset', upload.fields([
     { name: 'asset-image', maxCount: 1 },
     { name: 'invoice-image', maxCount: 1 }
@@ -52,7 +49,6 @@ router.post('/asset', upload.fields([
     }
 });
 
-// GET /asset - Get all assets
 router.get('/asset', async (req, res) => {
     try {
         const assets = await AssetModel.find({});
@@ -63,7 +59,6 @@ router.get('/asset', async (req, res) => {
     }
 });
 
-// GET /asset/:id - Get an asset by ID
 router.get('/asset/:id', async (req, res) => {
     try {
         const asset = await AssetModel.findById(req.params.id);
@@ -77,7 +72,6 @@ router.get('/asset/:id', async (req, res) => {
     }
 });
 
-// PUT /asset/:id - Update an asset by ID
 router.put('/asset/:id', upload.fields([
     { name: 'asset-image', maxCount: 1 },
     { name: 'invoice-image', maxCount: 1 }
@@ -104,7 +98,6 @@ router.put('/asset/:id', upload.fields([
     }
 });
 
-// DELETE /asset/:id - Delete an asset by ID
 router.delete('/asset/:id', async (req, res) => {
     try {
         const asset = await AssetModel.findByIdAndDelete(req.params.id);
@@ -118,7 +111,6 @@ router.delete('/asset/:id', async (req, res) => {
     }
 });
 
-// POST /service - Create a new service
 router.post('/service', async (req, res) => {
     try {
         const {
@@ -140,7 +132,6 @@ router.post('/service', async (req, res) => {
     }
 });
 
-// GET /service - Get all services
 router.get('/service', async (req, res) => {
     try {
         const services = await ServiceModel.find({}).populate('asset');
@@ -151,7 +142,6 @@ router.get('/service', async (req, res) => {
     }
 });
 
-// GET /service/:id - Get a service by ID
 router.get('/service/:id', async (req, res) => {
     try {
         const service = await ServiceModel.findById(req.params.id).populate('asset');
@@ -165,7 +155,6 @@ router.get('/service/:id', async (req, res) => {
     }
 });
 
-// PUT /service/:id - Update a service by ID
 router.put('/service/:id', async (req, res) => {
     try {
         const { id } = req.params;
@@ -180,7 +169,6 @@ router.put('/service/:id', async (req, res) => {
     }
 });
 
-// DELETE /service/:id - Delete a service by ID
 router.delete('/service/:id', async (req, res) => {
     try {
         const service = await ServiceModel.findByIdAndDelete(req.params.id);
