@@ -144,7 +144,7 @@ router.get('/service', async (req, res) => {
 
 router.get('/service/:id', async (req, res) => {
     try {
-        const service = await ServiceModel.findById(req.params.id).populate('asset');
+        const service = await ServiceModel.findById(req.params.id);
         if (!service) {
             return res.status(404).json({ error: 'Service not found' });
         }
