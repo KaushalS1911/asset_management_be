@@ -25,7 +25,7 @@ router.post('/asset', upload.fields([
     try {
 
 
-        const isExist = await AssetModel.exists({ asset_name, asset_type, asset_code });
+        const isExist = await AssetModel.exists({ asset_name: req.body.asset_name, asset_type:req.body.asset_type,asset_code: req.body.asset_code });
         if (isExist) {
             return res.status(400).json({ error: 'Asset with entered details already exists.' });
         }
