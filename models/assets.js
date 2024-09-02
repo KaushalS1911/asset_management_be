@@ -8,6 +8,7 @@ const assetSchema = new mongoose.Schema({
     company: String,
     seller_name: String,
     seller_company: String,
+    seller_contact: String,
     purchase_date: Date,
     new_refurbish: String,
     in_warranty: Boolean,

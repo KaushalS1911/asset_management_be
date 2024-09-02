@@ -26,7 +26,7 @@ router.post('/asset', upload.fields([
         const {
             asset_name, asset_type, asset_code, company, seller_name, seller_company,
             purchase_date, new_refurbish, location, invoice_no, warranty_start_date,
-            warranty_end_date, remark, person_name,in_warranty
+            warranty_end_date, remark, person_name,in_warranty, seller_contact
         } = req.body;
 
         const isExist = await AssetModel.exists({ asset_name, asset_type, asset_code });
@@ -37,7 +37,7 @@ router.post('/asset', upload.fields([
         const { assetImageUrl, invoiceImageUrl } = await handleFileUploads(req.files);
 
         const asset = await AssetModel.create({
-            asset_name, asset_type, asset_code, company, seller_name, seller_company,
+            asset_name, asset_type, asset_code, company, seller_name, seller_company,seller_contact,
             purchase_date, new_refurbish, location, invoice_no, warranty_start_date,person_name,in_warranty,
             warranty_end_date, remark, image_url: assetImageUrl, invoice_url: invoiceImageUrl
         });
