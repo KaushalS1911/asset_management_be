@@ -17,6 +17,8 @@ const assetSchema = new mongoose.Schema({
     image_url: String,
     invoice_url: String,
     invoice_no: String,
+    vehicle_insurance_start_date: {type: Date, default: null},
+    vehicle_insurance_end_date: {type: Date, default: null},
     warranty_start_date: {type:Date, default: null},
     warranty_end_date: {type:Date, default: null},
     remark: String
