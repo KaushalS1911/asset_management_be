@@ -12,6 +12,7 @@ async function addContract(req, res) {
             const formattedEndDate = new Date(end_date);
 
             const existingRecord = await ContractModel.findOne({
+
                 asset,
                 start_date: {
                     $gte: new Date(formattedStartDate.setUTCHours(0, 0, 0, 0)),
@@ -53,7 +54,7 @@ async function addContract(req, res) {
 
 async function allContract(req, res) {
     try {
-        const contracts = await ContractModel.find({}).populate('asset');
+        const contracts = await ContractModel.find({})
         return res.json(contracts);
     } catch (err) {
         console.error("Error fetching contracts:", err.message);
