@@ -1,4 +1,4 @@
-const ContractModel = require("../models/contracts")
+const ContractModel = require("../models/contract")
 
 async function addContract(req, res) {
     try {
