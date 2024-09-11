@@ -54,7 +54,7 @@ async function addContract(req, res) {
 
 async function allContract(req, res) {
     try {
-        const contracts = await ContractModel.find({})
+        const contracts = await ContractModel.find({}).populate("asset")
         return res.json(contracts);
     } catch (err) {
         console.error("Error fetching contracts:", err.message);
@@ -64,7 +64,7 @@ async function allContract(req, res) {
 
 async function singleContract(req, res) {
     try {
-        const service = await ContractModel.findById(req.params.id);
+        const service = await ContractModel.findById(req.params.id).populate("asset");
         if (!service) {
             return res.status(404).json({error: 'Contract not found'});
         }
