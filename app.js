@@ -5,8 +5,7 @@ const cookieParser = require('cookie-parser')
 const logger = require('morgan');
 const cors = require("cors");
 
-const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
+const appRouter = require('./routes/index');
 const mongoose = require("mongoose");
 const port = process.env.PORT || 8000
 
@@ -28,7 +27,7 @@ app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
+app.use('/api', appRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on PORT ${port}`)
