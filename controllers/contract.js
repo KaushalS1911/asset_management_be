@@ -77,17 +77,27 @@ async function singleContract(req, res) {
 
 async function updateContract(req, res) {
     try {
-        const {id} = req.params;
-        const updatedContract = await ContractModel.findByIdAndUpdate(id, req.body, {new: true});
-        if (!updatedContract) {
-            return res.status(404).json({error: "Contract not found"});
+        const { id } = req.params;
+
+        const contract = await ContractModel.findById(id);
+        if (!contract) {
+            return res.status(404).json({ error: "Contract not found" });
         }
-        return res.status(200).json({data: updatedContract, message: "Contract updated successfully"});
+
+        const isExist = await ContractModel.exists({ asset: contract.asset });
+        if (isExist) {
+            return res.status(400).json({ error: "Contract for this asset already exists" });
+        }
+
+        const updatedContract = await ContractModel.findByIdAndUpdate(id, req.body, { new: true });
+        return res.status(200).json({ data: updatedContract, message: "Contract updated successfully" });
+
     } catch (err) {
-        console.error("Error updating service:", err.message);
-        return res.status(500).json({error: "Failed to update service"});
+        console.error("Error updating contract:", err.message);
+        return res.status(500).json({ error: "Failed to update contract" });
     }
 }
+
 
 async function deleteContract(req, res) {
     try {
