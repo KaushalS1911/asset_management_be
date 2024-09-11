@@ -33,19 +33,15 @@ async function addContract(req, res) {
             const data = await ContractModel.insertMany(nonDuplicateRecords);
 
             res.json({
-                data: {
-                    attendance: data,
-                    message: "Contracts inserted successfully.",
-                },
+                status: 201,
+                data,
+                message: "Contracts inserted successfully.",
             });
         } else {
             return res.status(409).json({
                 message: "Contract records already exist."
             });
         }
-        const contracts = await ContractModel.insertMany(req.body);
-
-        return res.status(201).json({data: contracts, message: "Contract details added successfully"});
     } catch (err) {
         console.error("Error creating service:", err.message);
         return res.status(500).json({error: "Failed to create service"});
@@ -77,24 +73,24 @@ async function singleContract(req, res) {
 
 async function updateContract(req, res) {
     try {
-        const { id } = req.params;
+        const {id} = req.params;
 
         const contract = await ContractModel.findById(id);
         if (!contract) {
-            return res.status(404).json({ error: "Contract not found" });
+            return res.status(404).json({error: "Contract not found"});
         }
 
-        const isExist = await ContractModel.exists({ asset: contract.asset });
+        const isExist = await ContractModel.exists({asset: contract.asset});
         if (isExist) {
-            return res.status(400).json({ error: "Contract for this asset already exists" });
+            return res.status(400).json({error: "Contract for this asset already exists"});
         }
 
-        const updatedContract = await ContractModel.findByIdAndUpdate(id, req.body, { new: true });
-        return res.status(200).json({ data: updatedContract, message: "Contract updated successfully" });
+        const updatedContract = await ContractModel.findByIdAndUpdate(id, req.body, {new: true});
+        return res.status(200).json({data: updatedContract, message: "Contract updated successfully"});
 
     } catch (err) {
         console.error("Error updating contract:", err.message);
-        return res.status(500).json({ error: "Failed to update contract" });
+        return res.status(500).json({error: "Failed to update contract"});
     }
 }
 
