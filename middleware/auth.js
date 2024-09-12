@@ -8,6 +8,7 @@ const {ResourceNotFoundError} = require("../errors/userErrors");
 
 const auth = handleException(async function authenticate(req, res, next) {
     const authHeaders = _.pick(req.headers, ["auth_jwt", "auth_jwt_refresh"]);
+
     if (
         !authHeaders ||
         !authHeaders["auth_jwt"] ||

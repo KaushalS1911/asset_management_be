@@ -36,9 +36,9 @@ async function login(req, res) {
 
         if (!isMatch) res.status(400).json({status: 400, message: "Invalid credentials."});
 
-        await setTokens(company.id)
+        const tokens = await setTokens(company.id)
 
-        res.status(200).json({data: company, message: "Log in successfully."})
+        res.status(200).json({data: tokens, message: "Log in successfully."})
     } catch (err) {
         console.log(err)
         res.status(500).json({status: 500, message: "Internal Server error"});
@@ -58,8 +58,6 @@ async function getCompany(req, res) {
         res.status(500).json({status: 500, message: "Internal server error"});
     }
 }
-
-
 
 
 function getTokens(companyId) {
