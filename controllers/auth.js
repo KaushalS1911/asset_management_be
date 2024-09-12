@@ -43,11 +43,11 @@ async function login(req, res) {
 
 async function getCompany(req, res) {
     try {
-        const {_id} = req.user
+        const {id} = req.user
 
-        const actualCompanyId = _id === 'me' ? req.user._id : _id
+        // const actualCompanyId = id === 'me' ? req.userid : id
 
-        const company = await CompanyModel.findById(actualCompanyId)
+        const company = await CompanyModel.findById(id)
 
         res.status(200).json({data: company})
     } catch (err) {
