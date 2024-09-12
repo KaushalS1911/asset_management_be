@@ -2,6 +2,7 @@ const ServiceModel = require("../models/services")
 
 async function addService(req,res){
     try {
+        const {companyId} = req.params
         const {
             asset, start_date, end_date, service_by, service_person,
             service_person_contact, sended_by, received_by, receiver_contact,
@@ -11,7 +12,7 @@ async function addService(req,res){
         const service = await ServiceModel.create({
             asset, start_date, end_date, service_by, service_person,
             service_person_contact, sended_by, received_by, receiver_contact,
-            remark, status
+            remark, status, company_id: companyId
         });
 
         return res.status(201).json({ data: service, message: "Service details added successfully" });
@@ -23,7 +24,8 @@ async function addService(req,res){
 
 async function allService(req,res){
     try {
-        const services = await ServiceModel.find({}).populate('asset');
+        const {companyId} = req.params
+        const services = await ServiceModel.find({company_id: companyId}).populate('asset');
         return res.json(services);
     } catch (err) {
         console.error("Error fetching services:", err.message);
@@ -33,7 +35,8 @@ async function allService(req,res){
 
 async function singleService(req,res){
     try {
-        const service = await ServiceModel.findById(req.params.id);
+        const { id } = req.params;
+        const service = await ServiceModel.findById(id);
         if (!service) {
             return res.status(404).json({ error: 'Service not found' });
         }

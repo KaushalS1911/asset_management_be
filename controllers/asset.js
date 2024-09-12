@@ -15,7 +15,9 @@ async function handleFileUploads(files) {
 
 async function addAsset(req, res) {
     try {
+        const {companyId} = req.params
         const isExist = await AssetModel.exists({
+            company_id: companyId,
             asset_name: req.body.asset_name,
             asset_type: req.body.asset_type,
             asset_code: req.body.asset_code
@@ -26,7 +28,12 @@ async function addAsset(req, res) {
 
         const {assetImageUrl, invoiceImageUrl} = await handleFileUploads(req.files);
 
-        const asset = await AssetModel.create({...req.body, image_url: assetImageUrl, invoice_url: invoiceImageUrl});
+        const asset = await AssetModel.create({
+            ...req.body,
+            company_id: companyId,
+            image_url: assetImageUrl,
+            invoice_url: invoiceImageUrl
+        });
 
         return res.status(201).json({data: asset, message: "Asset details added successfully"});
     } catch (err) {
@@ -37,7 +44,8 @@ async function addAsset(req, res) {
 
 async function allAsset(req, res) {
     try {
-        const assets = await AssetModel.find({});
+        const {companyId} = req.params
+        const assets = await AssetModel.find({company_id: companyId});
         return res.json(assets);
     } catch (err) {
         console.error("Error fetching assets:", err.message);

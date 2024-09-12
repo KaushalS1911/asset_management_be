@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 
 const assetSchema = new mongoose.Schema({
+    company_id: {ref: "Company", type: String},
     asset_name: String,
     asset_type: String,
     asset_code: String,

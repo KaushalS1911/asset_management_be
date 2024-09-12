@@ -7,9 +7,9 @@ const contractRouter = require("../routes/contract")
 const authRouter = require("../routes/auth")
 
 router.use("/auth", authRouter);
-router.use("/asset", assetRouter);
-router.use("/service", serviceRouter);
-router.use("/contract", contractRouter);
+router.use("/company/:companyId/asset", assetRouter);
+router.use("/company/:companyId/service", serviceRouter);
+router.use("/company/:companyId/contract", contractRouter);
 
 
 module.exports = router;

@@ -2,6 +2,8 @@ const ContractModel = require("../models/contract")
 
 async function addContract(req, res) {
     try {
+        const {companyId} = req.params
+
         const contractData = req.body;
 
         const nonDuplicateRecords = [];
@@ -12,6 +14,7 @@ async function addContract(req, res) {
             const formattedEndDate = new Date(end_date);
 
             const existingRecord = await ContractModel.findOne({
+                company_id: companyId,
 
                 asset,
                 start_date: {
@@ -25,7 +28,7 @@ async function addContract(req, res) {
             });
 
             if (!existingRecord) {
-                nonDuplicateRecords.push(record);
+                nonDuplicateRecords.push({...record, company_id: companyId});
             }
         }
 
@@ -50,7 +53,8 @@ async function addContract(req, res) {
 
 async function allContract(req, res) {
     try {
-        const contracts = await ContractModel.find({}).populate("asset")
+        const {companyId} = req.params
+        const contracts = await ContractModel.find({company_id: companyId}).populate("asset")
         return res.json(contracts);
     } catch (err) {
         console.error("Error fetching contracts:", err.message);
@@ -60,7 +64,8 @@ async function allContract(req, res) {
 
 async function singleContract(req, res) {
     try {
-        const service = await ContractModel.findById(req.params.id).populate("asset");
+        const {id} = req.params
+        const service = await ContractModel.findById(id).populate("asset");
         if (!service) {
             return res.status(404).json({error: 'Contract not found'});
         }
@@ -73,14 +78,14 @@ async function singleContract(req, res) {
 
 async function updateContract(req, res) {
     try {
-        const {id} = req.params;
+        const {id, companyId} = req.params;
 
         const contract = await ContractModel.findById(id);
         if (!contract) {
             return res.status(404).json({error: "Contract not found"});
         }
 
-        const isExist = await ContractModel.exists({asset: contract.asset});
+        const isExist = await ContractModel.exists({company_id: companyId, asset: contract.asset, _id: { $ne: id }});
         if (isExist) {
             return res.status(400).json({error: "Contract for this asset already exists"});
         }

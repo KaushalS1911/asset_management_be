@@ -10,6 +10,7 @@ const serviceStatus = {
 
 const serviceSchema = new mongoose.Schema({
     asset: {type: String, ref: "Asset"},
+    company_id: {type: String, ref: "Company"},
     start_date: Date,
     end_date: Date,
     service_by: String,
