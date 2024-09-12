@@ -1,4 +1,5 @@
 const CompanyModel = require("../models/company")
+const ConfigModel = require("../models/config")
 const {createHash, verifyHash} = require("../helpers/hash")
 const {signLoginToken, signRefreshToken} = require("../helpers/jwt")
 
@@ -20,6 +21,8 @@ async function register(req, res) {
     });
 
     await company.save()
+
+    await setConfigs(company._id)
 
     res.status(201).json({data: company, message: "Registered successfully", status: 201})
 }
@@ -75,6 +78,13 @@ async function setTokens(companyId) {
     await CompanyModel.findByIdAndUpdate(companyId, {other_info: tokens}, {new: true})
 
     return getTokens(companyId);
+}
+
+async function setConfigs(companyId){
+    await ConfigModel.create({
+        company_id: companyId,
+        asset_type: ["Monitor", "CPU","Keyboard", "Mouse", "Cables","Fan","Light","Cupboard","Desk","Chair","Laptop","Display TV","Camera","AC","Fridge","Cellphone","Mobile","Fire Extinguisher","Router"]
+    })
 }
 
 
