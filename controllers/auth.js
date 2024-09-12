@@ -27,6 +27,7 @@ async function register(req, res) {
 async function login(req, res) {
     try {
         const {password, email} = req.body
+
         const company = await CompanyModel.findOne({email})
 
         if (!company) res.status(404).json({status: 404, message: "Company not found."});
@@ -35,10 +36,11 @@ async function login(req, res) {
 
         if (!isMatch) res.status(400).json({status: 400, message: "Invalid credentials."});
 
-        const tokens = await setTokens(company.id)
+        await setTokens(company.id)
 
-        res.status(200).json({data: {...company, tokens}, message: "Log in successfully."})
+        res.status(200).json({data: company, message: "Log in successfully."})
     } catch (err) {
+        console.log(err)
         res.status(500).json({status: 500, message: "Internal Server error"});
     }
 }
