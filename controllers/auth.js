@@ -20,6 +20,8 @@ async function register(req, res) {
     });
 
     await company.save()
+
+    res.status(201).json({data: company, message: "Registered successfully", status: 201})
 }
 
 async function login(req, res) {
