@@ -5,6 +5,7 @@ const companySchema = new mongoose.Schema({
     email: String,
     contact: String,
     password: String,
+    other_info: Object
 }, {timestamps: true})
 
 
