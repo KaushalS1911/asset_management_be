@@ -39,7 +39,7 @@ async function login(req, res) {
 
         res.status(200).json({data: {...company, tokens}, message: "Log in successfully."})
     } catch (err) {
-        res.status(err.status).json({status: err.status, message: err.message});
+        res.status(500).json({status: 500, message: "Internal Server error"});
     }
 }
 
@@ -53,7 +53,7 @@ async function getCompany(req, res) {
 
         res.status(200).json({data: company})
     } catch (err) {
-        res.status(err.status).json({status: err.status, message: err.message});
+        res.status(500).json({status: 500, message: "Internal server error"});
     }
 }
 
