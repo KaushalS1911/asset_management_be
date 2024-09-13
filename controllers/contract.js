@@ -2,23 +2,43 @@ const ContractModel = require("../models/contract")
 
 async function addContract(req, res) {
     try {
-        const {companyId} = req.params
+        const { companyId } = req.params;
+        const { assets, start_date, end_date, remark, cost, company_contact, company_name } = req.body;
 
-        const {assets, start_date, end_date,remark, cost, company_contact, company_name} = req.body
+        const conflictingContracts = await ContractModel.find({
+            company_id: companyId,
+            assets: { $in: assets }
+        });
 
-        const contract = {
-            assets,start_date, end_date,remark, cost, company_contact, company_name,company_id: companyId
+        const assignedAssets = conflictingContracts.flatMap(c => c.assets);
+
+        const newAssets = assets.filter(asset => !assignedAssets.includes(asset));
+
+        if (newAssets.length === 0) {
+            return res.status(400).json({ error: "All the assets are already assigned to other contracts" });
         }
 
-        const data = await ContractModel.create(contract)
+        const contract = {
+            assets: newAssets,
+            start_date,
+            end_date,
+            remark,
+            cost,
+            company_contact,
+            company_name,
+            company_id: companyId
+        };
 
-        return res.json({message: "Contract added successfully", status: 201, data})
+        const data = await ContractModel.create(contract);
+
+        return res.status(201).json({ message: "Contract added successfully", data });
 
     } catch (err) {
-        console.error("Error creating service:", err.message);
-        return res.status(500).json({error: "Failed to create service"});
+        console.error("Error creating contract:", err.message);
+        return res.status(500).json({ error: "Failed to create contract" });
     }
 }
+
 
 async function allContract(req, res) {
     try {
