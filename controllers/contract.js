@@ -4,47 +4,16 @@ async function addContract(req, res) {
     try {
         const {companyId} = req.params
 
-        const contractData = req.body;
+        const {assets, start_date, end_date,remark, cost, company_contact, company_name} = req.body
 
-        const nonDuplicateRecords = [];
-
-        for (const record of contractData) {
-            const {asset, start_date, end_date, company_name} = record;
-            const formattedStartDate = new Date(start_date);
-            const formattedEndDate = new Date(end_date);
-
-            const existingRecord = await ContractModel.findOne({
-                company_id: companyId,
-
-                asset,
-                start_date: {
-                    $gte: new Date(formattedStartDate.setUTCHours(0, 0, 0, 0)),
-                    $lte: new Date(formattedStartDate.setUTCHours(23, 59, 59, 999))
-                }, end_date: {
-                    $gte: new Date(formattedEndDate.setUTCHours(0, 0, 0, 0)),
-                    $lte: new Date(formattedEndDate.setUTCHours(23, 59, 59, 999))
-                },
-                company_name
-            });
-
-            if (!existingRecord) {
-                nonDuplicateRecords.push({...record, company_id: companyId});
-            }
+        const contract = {
+            assets,start_date, end_date,remark, cost, company_contact, company_name,company_id: companyId
         }
 
-        if (nonDuplicateRecords.length > 0) {
-            const data = await ContractModel.insertMany(nonDuplicateRecords);
+        const data = await ContractModel.create(contract)
 
-            res.json({
-                status: 201,
-                data,
-                message: "Contracts inserted successfully.",
-            });
-        } else {
-            return res.status(409).json({
-                message: "Contract records already exist."
-            });
-        }
+        return res.json({message: "Contract added successfully", status: 201, data})
+
     } catch (err) {
         console.error("Error creating service:", err.message);
         return res.status(500).json({error: "Failed to create service"});
@@ -54,7 +23,7 @@ async function addContract(req, res) {
 async function allContract(req, res) {
     try {
         const {companyId} = req.params
-        const contracts = await ContractModel.find({company_id: companyId}).populate("asset")
+        const contracts = await ContractModel.find({company_id: companyId})
         return res.json(contracts);
     } catch (err) {
         console.error("Error fetching contracts:", err.message);
@@ -65,7 +34,7 @@ async function allContract(req, res) {
 async function singleContract(req, res) {
     try {
         const {id} = req.params
-        const service = await ContractModel.findById(id).populate("asset");
+        const service = await ContractModel.findById(id)
         if (!service) {
             return res.status(404).json({error: 'Contract not found'});
         }
@@ -78,26 +47,41 @@ async function singleContract(req, res) {
 
 async function updateContract(req, res) {
     try {
-        const {id, companyId} = req.params;
+        const { id, companyId } = req.params;
+        const { assets } = req.body;
 
         const contract = await ContractModel.findById(id);
         if (!contract) {
-            return res.status(404).json({error: "Contract not found"});
+            return res.status(404).json({ error: "Contract not found" });
         }
 
-        const isExist = await ContractModel.exists({company_id: companyId, asset: contract.asset, _id: { $ne: id }});
-        if (isExist) {
-            return res.status(400).json({error: "Contract for this asset already exists"});
+        const conflictingContracts = await ContractModel.find({
+            company_id: companyId,
+            assets: { $in: assets },
+            _id: { $ne: id }
+        });
+
+        const assignedAssets = conflictingContracts.flatMap(c => c.assets);
+
+        const newAssets = assets.filter(asset => !assignedAssets.includes(asset));
+
+        if (newAssets.length === 0) {
+            return res.status(400).json({ error: "All the assets are already assigned to other contracts" });
         }
 
-        const updatedContract = await ContractModel.findByIdAndUpdate(id, req.body, {new: true});
-        return res.status(200).json({data: updatedContract, message: "Contract updated successfully"});
+        contract.assets = [...new Set([...contract.assets, ...newAssets])]; // Prevent duplicates
+
+
+        const updatedContract = await contract.save();
+
+        return res.status(200).json({ data: updatedContract, message: "Contract updated successfully with new assets" });
 
     } catch (err) {
         console.error("Error updating contract:", err.message);
-        return res.status(500).json({error: "Failed to update contract"});
+        return res.status(500).json({ error: "Failed to update contract" });
     }
 }
+
 
 
 async function deleteContract(req, res) {
