@@ -83,7 +83,7 @@ async function setTokens(companyId) {
 async function setConfigs(companyId){
     await ConfigModel.create({
         company_id: companyId,
-        asset_type: ["Monitor", "CPU","Keyboard", "Mouse", "Cables","Fan","Light","Cupboard","Desk","Chair","Laptop","Display TV","Camera","AC","Fridge","Cellphone","Mobile","Fire Extinguisher","Router"]
+        asset_type: ["Electronics", "Hardware","Furniture", "Vehicles", "Cables"]
     })
 }
 
