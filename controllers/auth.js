@@ -40,8 +40,16 @@ async function login(req, res) {
         if (!isMatch) res.status(400).json({status: 400, message: "Invalid credentials."});
 
         const tokens = await setTokens(company.id)
+const data = {
+            _id:company._id,
+    name:company.name,
+    email:company.email,
+    contact:company.contact,
+    other_info:company.other_info
 
-        res.status(200).json({data: tokens, message: "Log in successfully."})
+
+}
+        res.status(200).json({data, message: "Log in successfully."})
     } catch (err) {
         console.log(err)
         res.status(500).json({status: 500, message: "Internal Server error"});
