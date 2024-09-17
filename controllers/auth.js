@@ -40,15 +40,13 @@ async function login(req, res) {
         if (!isMatch) res.status(400).json({status: 400, message: "Invalid credentials."});
 
         const tokens = await setTokens(company.id)
-const data = {
-            _id:company._id,
-    name:company.name,
-    email:company.email,
-    contact:company.contact,
-    other_info:tokens
-
-
-}
+        const data = {
+            _id: company._id,
+            name: company.name,
+            email: company.email,
+            contact: company.contact,
+            other_info: tokens
+        }
         res.status(200).json({data, message: "Log in successfully."})
     } catch (err) {
         console.log(err)
@@ -88,13 +86,12 @@ async function setTokens(companyId) {
     return getTokens(companyId);
 }
 
-async function setConfigs(companyId){
+async function setConfigs(companyId) {
     await ConfigModel.create({
         company_id: companyId,
-        asset_types: ["Electronics", "Hardware","Furniture", "Vehicles", "Cables"]
+        asset_types: ["Electronics", "Hardware", "Furniture", "Vehicles", "Cables"]
     })
 }
-
 
 
 module.exports = {register, login, getCompany}

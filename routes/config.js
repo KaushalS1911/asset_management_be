@@ -5,7 +5,7 @@ const {getConfigs,updateConfigs} = require("../controllers/config");
 
 router.get('/:companyId/config', getConfigs);
 
-router.get('/:companyId/config/:id', updateConfigs);
+router.put('/:companyId/config/:id', updateConfigs);
 
 
 module.exports = router
