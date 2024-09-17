@@ -3,14 +3,14 @@ const router = express.Router()
 const {addContract, allContract, singleContract, deleteContract, updateContract} = require("../controllers/contract");
 
 
-router.post('/', addContract);
+router.post('/:companyId/contract/', addContract);
 
-router.get('/', allContract);
+router.get('/:companyId/contract/', allContract);
 
-router.get('/:id', singleContract);
+router.get('/:companyId/contract/:id', singleContract);
 
-router.put('/:id', updateContract);
+router.put('/:companyId/contract/:id', updateContract);
 
-router.delete('/:id', deleteContract);
+router.delete('/:companyId/contract/:id', deleteContract);
 
 module.exports = router

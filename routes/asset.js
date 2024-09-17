@@ -6,20 +6,20 @@ const {allAsset, addAsset, deleteAsset, updateAsset, singleAsset} = require("../
 const storage = multer.memoryStorage();
 const upload = multer({storage: storage});
 
-router.post('/', upload.fields([
+router.post('/:companyId/asset/', upload.fields([
     {name: 'asset-image', maxCount: 1},
     {name: 'invoice-image', maxCount: 1}
 ]), addAsset);
 
-router.get('/', allAsset);
+router.get('/:companyId/asset/', allAsset);
 
-router.get('/:id', singleAsset);
+router.get('/:companyId/asset/:id', singleAsset);
 
-router.put('/:id', upload.fields([
+router.put('/:companyId/asset/:id', upload.fields([
     {name: 'asset-image', maxCount: 1},
     {name: 'invoice-image', maxCount: 1}
 ]), updateAsset);
 
-router.delete('/:id', deleteAsset);
+router.delete('/:companyId/asset/:id', deleteAsset);
 
 module.exports = router

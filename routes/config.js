@@ -3,9 +3,9 @@ const router = express.Router()
 const {getConfigs,updateConfigs} = require("../controllers/config");
 
 
-router.get('/', getConfigs);
+router.get('/:companyId/config', getConfigs);
 
-router.get('/:id', updateConfigs);
+router.get('/:companyId/config/:id', updateConfigs);
 
 
 module.exports = router

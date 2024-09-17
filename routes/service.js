@@ -3,14 +3,14 @@ const router = express.Router()
 const {addService, allService, singleService, deleteService, updateService} = require("../controllers/service");
 
 
-router.post('/', addService);
+router.post('/:companyId/service/', addService);
 
-router.get('/', allService);
+router.get('/:companyId/service/', allService);
 
-router.get('/:id', singleService);
+router.get('/:companyId/service/:id', singleService);
 
-router.put('/:id', updateService);
+router.put('/:companyId/service/:id', updateService);
 
-router.delete('/:id', deleteService);
+router.delete('/:companyId/service/:id', deleteService);
 
 module.exports = router

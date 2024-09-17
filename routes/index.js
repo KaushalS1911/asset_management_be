@@ -8,10 +8,11 @@ const authRouter = require("../routes/auth")
 const configRouter = require("../routes/config")
 
 router.use("/auth", authRouter);
-router.use("/company/:companyId/config", configRouter);
-router.use("/company/:companyId/asset", assetRouter);
-router.use("/company/:companyId/service", serviceRouter);
-router.use("/company/:companyId/contract", contractRouter);
+router.use("/company", configRouter);
+router.use("/company", assetRouter);
+router.use("/company", serviceRouter);
+router.use("/company", contractRouter);
 
 
 module.exports = router;
+
