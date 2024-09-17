@@ -4,11 +4,11 @@ async function getConfigs(req, res) {
     try {
         const {companyId} = req.params
 
-        const data = await ConfigModel.find({company_id: companyId})
+        const data = await ConfigModel.findOne({company_id: companyId})
 
-        res.json({data, status: 200})
+        return res.json({data, status: 200})
     } catch (err) {
-        res.status(500).json({status: 500, message: "Internal server error"})
+        return res.status(500).json({status: 500, message: "Internal server error"})
     }
 }
 
@@ -22,9 +22,9 @@ async function updateConfigs(req, res) {
 
         const data = await ConfigModel.findByIdAndUpdate(id, req.body, {new: true})
 
-        res.json({data, status: 200})
+        return res.json({data, status: 200})
     } catch (err) {
-        res.status(500).json({status: 500, message: "Internal server error"})
+       return  res.status(500).json({status: 500, message: "Internal server error"})
     }
 }
 
