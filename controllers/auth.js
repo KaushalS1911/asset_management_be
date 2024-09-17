@@ -45,7 +45,7 @@ const data = {
     name:company.name,
     email:company.email,
     contact:company.contact,
-    other_info:company.other_info
+    other_info:tokens
 
 
 }
