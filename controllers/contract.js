@@ -89,10 +89,10 @@ async function updateContract(req, res) {
             return res.status(400).json({ error: "All the assets are already assigned to other contracts" });
         }
 
-        contract.assets = [...new Set([...contract.assets, ...newAssets])]; // Prevent duplicates
+        const addedAssets = [...new Set([...contract.assets, ...newAssets])]; // Prevent duplicates
 
 
-        const updatedContract = await contract.save();
+        const updatedContract = await ContractModel.findByIdAndUpdate(id, {...req.body, assets:addedAssets }, {new: true});
 
         return res.status(200).json({ data: updatedContract, message: "Contract updated successfully with new assets" });
 
