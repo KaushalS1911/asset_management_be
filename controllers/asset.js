@@ -1,6 +1,6 @@
 const AssetModel = require("../models/assets")
 const {uploadFile, uploadInvoiceFile} = require('../helpers/images');
-
+const readXlsxFile = require('read-excel-file/node');
 
 async function handleFileUploads(files) {
     const assetImage = files['asset-image'] ? files['asset-image'][0] : null;
@@ -30,6 +30,8 @@ async function addAsset(req, res) {
 
         const asset = await AssetModel.create({
             ...req.body,
+            asset_type:req.body.asset_type.toUpperCase(),
+            location:req.body.location.toUpperCase(),
             company_id: companyId,
             image_url: assetImageUrl,
             invoice_url: invoiceImageUrl
@@ -89,6 +91,65 @@ async function updateAsset(req, res) {
     }
 }
 
+async function bulkImportAssets(req, res) {
+    const {companyId} = req.params
+    const fileBuffer = req.file.buffer;
+    const rows = await readXlsxFile(fileBuffer);
+    const header = rows.shift();
+
+    let successCount = 0;
+    let failureCount = 0;
+    const errors = [];
+
+    for (let row of rows) {
+        try {
+            const assetData = mapRowToAsset(row, header);
+            console.log(assetData)
+            const payload = {
+                asset_name: assetData['AssetName'],
+                asset_type: assetData['AssetType'],
+                asset_code: assetData['AssetCode'],
+                company: assetData['Company'],
+                purchase_date: new Date(assetData['PurchaseDate']),
+                seller_name: assetData['SellerName'],
+                seller_company: assetData['SellerCompany'],
+                seller_contact: assetData['SellerContact'],
+                new_refurbish: assetData['New/Refurbish'],
+                in_warranty: assetData['WarrantyInformation'],
+                location: assetData['Location'],
+                invoice_no: assetData['InvoiceNo'],
+                remark: assetData['Remark'],
+                person_name: assetData['PersonName'],
+            }
+            await AssetModel.create({
+                ...payload,
+                company_id: companyId,
+            });
+
+            successCount++;
+        } catch (error) {
+            failureCount++;
+            errors.push({row, error: error.message});
+        }
+    }
+
+    return {successCount, failureCount, errors};
+}
+
+function mapRowToAsset(row, header) {
+    const studentData = {};
+
+    header.forEach((col, index) => {
+        if (col === 'contact' || col === 'zipcode') {
+            studentData[col] = row[index]?.toString() || '';
+        } else {
+            studentData[col] = row[index] || '';
+        }
+    });
+
+    return studentData;
+}
+
 async function deleteAsset(req, res) {
     try {
         const asset = await AssetModel.findByIdAndDelete(req.params.id);
@@ -103,4 +164,4 @@ async function deleteAsset(req, res) {
 }
 
 
-module.exports = {addAsset, allAsset, singleAsset, updateAsset, deleteAsset}
+module.exports = {addAsset, allAsset, singleAsset, updateAsset, deleteAsset,bulkImportAssets}
