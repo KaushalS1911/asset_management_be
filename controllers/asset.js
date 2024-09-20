@@ -31,6 +31,8 @@ async function addAsset(req, res) {
         const asset = await AssetModel.create({
             ...req.body,
             asset_type:req.body.asset_type.toUpperCase(),
+            asset_name:req.body.asset_name.toUpperCase(),
+            company:req.body.company.toUpperCase(),
             location:req.body.location.toUpperCase(),
             company_id: companyId,
             image_url: assetImageUrl,
@@ -106,17 +108,17 @@ async function bulkImportAssets(req, res) {
             const assetData = mapRowToAsset(row, header);
             console.log(assetData)
             const payload = {
-                asset_name: assetData['AssetName'],
-                asset_type: assetData['AssetType'],
+                asset_name: assetData['AssetName'].toUpperCase(),
+                asset_type: assetData['AssetType'].toUpperCase(),
                 asset_code: assetData['AssetCode'],
-                company: assetData['Company'],
+                company: assetData['Company'].toUpperCase(),
                 purchase_date: new Date(assetData['PurchaseDate']),
                 seller_name: assetData['SellerName'],
                 seller_company: assetData['SellerCompany'],
                 seller_contact: assetData['SellerContact'],
                 new_refurbish: assetData['New/Refurbish'],
                 in_warranty: assetData['WarrantyInformation'],
-                location: assetData['Location'],
+                location: assetData['Location'].toUpperCase(),
                 invoice_no: assetData['InvoiceNo'],
                 remark: assetData['Remark'],
                 person_name: assetData['PersonName'],
