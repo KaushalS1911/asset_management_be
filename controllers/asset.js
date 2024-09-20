@@ -106,7 +106,6 @@ async function bulkImportAssets(req, res) {
     for (let row of rows) {
         try {
             const assetData = mapRowToAsset(row, header);
-            console.log(assetData)
             const payload = {
                 asset_name: assetData['AssetName'].toUpperCase(),
                 asset_type: assetData['AssetType'].toUpperCase(),
