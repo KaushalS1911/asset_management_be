@@ -122,6 +122,15 @@ async function bulkImportAssets(req, res) {
                 remark: assetData['Remark'],
                 person_name: assetData['PersonName'],
             }
+            const isExist = await AssetModel.exists({
+                company_id: companyId,
+                asset_name:payload.asset_name,
+                asset_type:payload.asset_type,
+                asset_code:payload.asset_code
+            });
+            if (isExist) {
+                return res.status(400).json({error: 'Asset with entered details already exists.'});
+            }
             await AssetModel.create({
                 ...payload,
                 company_id: companyId,
