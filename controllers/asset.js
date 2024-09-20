@@ -133,7 +133,7 @@ async function bulkImportAssets(req, res) {
         }
     }
 
-    return {successCount, failureCount, errors};
+    return res.status(201).json({data: {successCount, failureCount, errors}, message: "Asset details added successfully"})
 }
 
 function mapRowToAsset(row, header) {
