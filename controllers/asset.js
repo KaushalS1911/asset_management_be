@@ -1,4 +1,6 @@
 const AssetModel = require("../models/assets")
+const ServiceModel=require('../models/services')
+const ContractModel = require('../models/contract')
 const {uploadFile, uploadInvoiceFile} = require('../helpers/images');
 const readXlsxFile = require('read-excel-file/node');
 
@@ -18,8 +20,6 @@ async function addAsset(req, res) {
         const {companyId} = req.params
         const isExist = await AssetModel.exists({
             company_id: companyId,
-            asset_name: req.body.asset_name,
-            asset_type: req.body.asset_type,
             asset_code: req.body.asset_code
         });
         if (isExist) {
@@ -124,8 +124,6 @@ async function bulkImportAssets(req, res) {
             }
             const isExist = await AssetModel.exists({
                 company_id: companyId,
-                asset_name:payload.asset_name,
-                asset_type:payload.asset_type,
                 asset_code:payload.asset_code
             });
             if (isExist) {
@@ -163,10 +161,28 @@ function mapRowToAsset(row, header) {
 async function deleteAsset(req, res) {
     try {
         const asset = await AssetModel.findByIdAndDelete(req.params.id);
+        const contract = await ContractModel.find({
+            assets: { $in: [req.params.id] }
+        }).lean();
+        const filterContract = contract.map((item) => (
+            { ...item, assets:item?.assets?.filter((data) => data !== req.params.id)
+            }
+        ))
+        await Promise.all(filterContract.map(async (contract) => {
+            if(contract.assets.length){
+            await ContractModel.findByIdAndUpdate(contract._id, { assets: contract.assets }, {new : true});
+
+            }else {
+
+            await ContractModel.findByIdAndDelete(contract._id);
+            }
+        }));
+
         if (!asset) {
             return res.status(404).json({error: "Asset not found"});
         }
-        return res.json({message: "Asset deleted successfully"});
+        await ServiceModel.deleteMany({ asset: req.params.id });
+        return res.status(200).json({message: "Asset deleted successfully"});
     } catch (err) {
         console.error("Error deleting asset:", err.message);
         return res.status(500).json({error: "Failed to delete asset"});
